@@ -3,23 +3,42 @@
 namespace NW\WebService\References\Operations\Notification;
 
 /**
- * @property Seller $Seller
+ * @property Seller $seller
  */
 class Contractor
 {
     const TYPE_CUSTOMER = 0;
+
+    /** @var int */
     public $id;
+
+    /** @var int */
     public $type;
+
+    /** @var string */
     public $name;
 
-    public static function getById(int $resellerId): self
+    /** @var Seller $seller */
+    public $seller;
+
+    public function __construct(int $id)
+    {
+        $this->id = $id;
+    }
+
+    public static function getById(int $resellerId): ?self
     {
         return new self($resellerId); // fakes the getById method
     }
 
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
     public function getFullName(): string
     {
-        return $this->name . ' ' . $this->id;
+        return null !== $this->name ? $this->name . ' ' . $this->id : $this->id;
     }
 }
 
@@ -33,8 +52,6 @@ class Employee extends Contractor
 
 class Status
 {
-    public $id, $name;
-
     public static function getName(int $id): string
     {
         $a = [
@@ -50,19 +67,14 @@ class Status
 abstract class ReferencesOperation
 {
     abstract public function doOperation(): array;
-
-    public function getRequest($pName)
-    {
-        return $_REQUEST[$pName];
-    }
 }
 
-function getResellerEmailFrom()
+function getResellerEmailFrom(string $resellerId): ?string
 {
     return 'contractor@example.com';
 }
 
-function getEmailsByPermit($resellerId, $event)
+function getEmailsByPermit($resellerId, $event): array
 {
     // fakes the method
     return ['someemeil@example.com', 'someemeil2@example.com'];
